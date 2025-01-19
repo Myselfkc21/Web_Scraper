@@ -6,6 +6,8 @@ import request from "request";
 import * as cheerio from "cheerio";
 import cors from "cors";
 import EventEmitter from "events";
+import { hostname } from "os";
+
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
@@ -190,7 +192,7 @@ function fetchSourceData(html) {
 //using socket.io for the client - server communications
 io.on("connection", async (socket) => {
   console.log("Client is connected to the server");
-//we use socket.emm=mit here because each client gets connected at any random time and we need to get the data to that exact time
+  //we use socket.emm=mit here because each client gets connected at any random time and we need to get the data to that exact time
   try {
     const recentCount = await getRecentStoryCount();
     socket.emit("initial_count", { count: recentCount }); //sends count to specific connected client
@@ -230,7 +232,7 @@ async function start() {
   try {
     await initializeDatabase(); //we basically created the DB here
     await startScraping(); //initial scraping
-    setInterval(startScraping, 100000); //recurring scraping
+    setInterval(startScraping, 1000); //recurring scraping
 
     const PORT = 3000;
     server.listen(PORT, () => {
